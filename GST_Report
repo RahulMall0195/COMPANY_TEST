@@ -1,0 +1,114 @@
+                                    D:\ERP_V01.2\ERP_V01.2\App_Code\FAMIS\DAL\DALSGXFAMIS.cs
+                                    
+                                    
+using System;
+using System.Data;
+using System.Configuration;
+using System.Linq;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Xml.Linq;
+using System.Data.SqlClient;
+
+/// <summary>
+/// Summary description for DALSGXFAMIS
+/// </summary>
+public class DALSGXFAMIS
+{
+    string connStr = ConfigurationManager.ConnectionStrings["DBConnSGX"].ToString();
+    public DALSGXFAMIS()
+	{
+		//
+		// TODO: Add constructor logic here
+		//
+	}                             
+             
+              public DataTable FA_GST_Report(string BRANCH_CODE, string FROM_DATE, string TO_DATE)
+    {
+        SqlConnection conn = new SqlConnection(connStr);
+
+        SqlDataAdapter dAd = new SqlDataAdapter("USP_GET_GST_REPORT_Anakapalli", conn);
+        dAd.SelectCommand.CommandType = CommandType.StoredProcedure;
+        dAd.SelectCommand.CommandTimeout = 180;
+        DataSet dSet = new DataSet();
+        try
+        {
+            //dAd.SelectCommand.Parameters.AddWithValue("@compCode", compCode);
+            //dAd.SelectCommand.Parameters.AddWithValue("@region", region);
+            dAd.SelectCommand.Parameters.AddWithValue("@BRANCH_CODE", BRANCH_CODE);
+            dAd.SelectCommand.Parameters.AddWithValue("@FROM_DATE", FROM_DATE);
+            dAd.SelectCommand.Parameters.AddWithValue("@TO_DATE", TO_DATE);
+            dAd.Fill(dSet, "tbl_FA_V24022014");
+            return dSet.Tables["tbl_FA_V24022014"];
+        }
+        catch
+        {
+            throw;
+        }
+        finally
+        {
+            dSet.Dispose();
+            dAd.Dispose();
+            conn.Close();
+            conn.Dispose();
+        }
+
+    }
+}                                
+
+
+                                 
+                                 D:\ERP_V01.2\ERP_V01.2\App_Code\FAMIS\BAL\BALSGXFAMIS.cs
+                                 
+                                 
+
+using System;
+using System.Data;
+using System.Configuration;
+using System.Linq;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Xml.Linq;
+
+/// <summary>
+/// Summary description for BALSGXFAMIS
+/// </summary>
+public class BALSGXFAMIS
+{
+	public BALSGXFAMIS()
+	{
+		//
+		// TODO: Add constructor logic here
+		//
+	}
+
+
+public DataTable FA_GST_Report(string BRANCH_CODE, string FROM_DATE, string TDate)
+    {
+        DALSGXFAMIS rpt = new DALSGXFAMIS();
+        try
+        {
+            return rpt.FA_GST_Report(BRANCH_CODE, FROM_DATE, TDate);
+        }
+        catch
+        {
+            throw;
+        }
+        finally
+        {
+            rpt = null;
+        }
+    }
+}
+                                 
+                                 
+
+                                    
